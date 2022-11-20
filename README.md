@@ -3,7 +3,7 @@ A discord bot that will archive channels and spit out random results with a comm
 
 Needs a .env file with the following information
 
-TOKEN = 
-QUERY_CHANNEL = 
-RECOMMENDATION_THREAD = 
-MUSEUM_CHANNEL = 
+TOKEN = ""
+QUERY_CHANNEL = (put channel id here)
+RECOMMENDATION_THREAD = (put channel id here)
+MUSEUM_CHANNEL = (put channel id here)
