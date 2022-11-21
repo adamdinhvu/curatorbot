@@ -74,11 +74,10 @@ class Museum(Cog):
 
         if len(record) > 0:
             url = f"https://cdn.discordapp.com/attachments/{record[1]}/{record[0]}/{record[2]}"
-            new_text = f"👴_{self.flavour_texts[randrange(0,len(self.flavour_texts)-1)]}:_\n{url}"
-            #await ctx.send(new_text)
+            new_text = f"_{self.flavour_texts[randrange(0,len(self.flavour_texts)-1)]}:_"
             
-            embded_response = discord.Embed(title="", description=new_text, color=0x00ff00)
-            embded_response.add_field(name="", value=url, inline=False)
+            embded_response = discord.Embed(title="👴 The Curator Unearths...", description=new_text, color=0x77bbff)
+            embded_response.set_image(url=url)
             await ctx.send(embed=embded_response)
 
             await sql.close()
