@@ -22,6 +22,8 @@ class Recommendation(Cog):
             if youtube_id is None:
                 return
             
+            print(f"Adding {youtube_id} to the database")
+
             #print(youtube_id)
             values = (youtube_id,message.author.id)
             sql = await aiosqlite.connect("curator.db")
@@ -38,6 +40,8 @@ class Recommendation(Cog):
             await ctx.respond(f"Command only available in channel: {self.bot.get_channel(channel_id).name}")
             return
         
+        print("Searching for a video")
+
         sql = await aiosqlite.connect("curator.db")
         cur = await sql.execute(f"""SELECT * FROM videos ORDER BY RANDOM() LIMIT 1""")
         try:
@@ -70,6 +74,7 @@ class Recommendation(Cog):
             if youtube_id is None:
                 continue
             
+            print(f"Adding {youtube_id} to the database")
             values = (youtube_id,message.author.id)
             await sql.execute(f"""INSERT OR IGNORE INTO videos VALUES(?,?)""",values)
         

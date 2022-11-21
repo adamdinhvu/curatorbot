@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from recommendations import Cog
+from curator import Cog
 import sqlite3
 from os import getenv
 import re
@@ -39,6 +39,7 @@ class Museum(Cog):
             for i in content_urls + attatchments:
                 if i.endswith(valid_extensions):
                     url_parts = i.replace("https://cdn.discordapp.com/attachments/","").split("/")
+                    print(f"Adding {str(i)} to the database")
                     # The SQL columns: image_id INTEGER PRIMARY KEY, channel_id INTEGER, image_name TEXT
                     values = (int(url_parts[1]),int(url_parts[0]),url_parts[2]) 
                     await cur.execute(f"""INSERT OR IGNORE INTO museum VALUES(?,?,?)""",values)
@@ -57,6 +58,8 @@ class Museum(Cog):
         
         await ctx.respond("The curator searches for something.")
         
+        print(f"Launching artifact request")
+
         sleep(.7)
         
         sql = await aiosqlite.connect("curator.db")
@@ -87,6 +90,8 @@ class Museum(Cog):
             await ctx.respond(f"Command only available in channel: {self.bot.get_channel(channel_id).name}")
             return
         
+        await ctx.respond("Attempting database update")
+
         sql = await aiosqlite.connect("curator.db")
         cur = await sql.cursor()
         async for message in ctx.guild.get_channel_or_thread(int(getenv("MUSEUM_CHANNEL"))).history(limit=None):    
@@ -98,12 +103,13 @@ class Museum(Cog):
             valid_extensions = (".mov",".mp4",".jpg",".jpeg",".png",".gif",".gifv",".webm",".mp3",".ogg")
             for i in content_urls + attatchments:
                 if i.endswith(valid_extensions):
-                    url_parts = i.replace("https://cdn.discordapp.com/attachments/","").split("/")
+                    url_parts = i.replace("https://cdn.discordapp.com/attachments/","").replace("https://media.discordapp.net/attachments/","").split("/")
+                    print(f"Adding {str(i)} to the database")
                     # The SQL columns: image_id INTEGER PRIMARY KEY, channel_id INTEGER, image_name TEXT
                     values = (int(url_parts[1]),int(url_parts[0]),url_parts[2]) 
                     await cur.execute(f"""INSERT OR IGNORE INTO museum VALUES(?,?,?)""",values)
 
-        await ctx.respond("Updated museum database")
+        await ctx.send("Update Successful :)")
 
         await sql.commit()
         await sql.close()
